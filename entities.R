@@ -2,19 +2,25 @@ setwd("E://R//datamodel")
 library(xlsx)
 
 # open Excel file
-fileInput <- read.xlsx("Data Model 2.xlsx", sheetName = "Entities", encoding = "UTF-8")
+fileInput <- read.xlsx("Data Model 2.xlsx", sheetName = "Entities", startRow = 2, colIndex = c(1:11), encoding = "UTF-8")
 
 # Send output to file
 fileOutput <- "entities_fragment.config"
 sink(fileOutput)
 
 #
-vecCols <- c("entity", "field name", "caption", "type", "nullable", "size")
+vecColnames <- c("inScope", "attributeName", "description", "permittedValues", 
+                 "entityName", "fieldName", "fieldCaption", "fieldType", "fieldLength", "isNullable", "enumerationName")
 
+colnames(fileInput) <- vecColnames
+
+# replace yes/no in column "is nullable" with true/false
+fileInput$isNullable <- sapply(fileInput$isNullable, function(x) gsub("yes", "true", x, ignore.case = TRUE))
+fileInput$isNullable <- sapply(fileInput$isNullable, function(x) gsub("no", "false", x, ignore.case = TRUE))
 
 lastDmEntity <- ""
 currentDmRow <- 0
-for (currentDmEntity in fileInput[, 3]) {
+for (currentDmEntity in fileInput[, "entityName"]) {
     if (!is.na(currentDmEntity)) {
         currentDmRow <- currentDmRow + 1
         if (currentDmEntity != lastDmEntity) {
@@ -25,43 +31,40 @@ for (currentDmEntity in fileInput[, 3]) {
                 cat(outputLine)
             }
             lastDmEntity <- currentDmEntity
-            outputLine <- paste("\t\t<entity name=\"", lastDmEntity, "\">", "\n", sep = "")
+            outputLine <- paste("\t\t<entityName=\"", lastDmEntity, "\">", "\n", sep = "")
             cat(outputLine)
             outputLine <- "\t\t\t<fieldgroup>\n"
             cat(outputLine)
         }
-        if (tolower(fileInput[currentDmRow, 5]) == "enum") {
-            outputLine <- paste("\t\t\t\t<field name=\"", fileInput[currentDmRow, 4], "\" ", 
-                                            "caption=\"", fileInput[currentDmRow, 2], "\" ", 
+        if (tolower(fileInput[currentDmRow, "fieldType"]) == "enum") {
+            outputLine <- paste("\t\t\t\t<fieldName=\"", fileInput[currentDmRow, "fieldName"], "\" ", 
+                                            "caption=\"", fileInput[currentDmRow, "field caption"], "\" ", 
                                                "type=\"enum\" ", 
-                                               "enum=\"", fileInput[currentDmRow, 9], "\">", "\n", sep = "")
-            
+                                               "enum=\"", fileInput[currentDmRow, "enumerationName"], "\">", "\n", sep = "")
         }
-        else if (tolower(fileInput[currentDmRow, 5]) == "bool") {
-            outputLine <- paste("\t\t\t\t<field name=\"", fileInput[currentDmRow, 4], "\" ", 
-                                            "caption=\"", fileInput[currentDmRow, 2], "\" ", 
+        else if (tolower(fileInput[currentDmRow, "fieldType"]) == "bool") {
+            outputLine <- paste("\t\t\t\t<fieldName=\"", fileInput[currentDmRow, "fieldName"], "\" ", 
+                                            "caption=\"", fileInput[currentDmRow, "field caption"], "\" ", 
                                                "type=\"string\" ", 
-                                           "nullable=\"", fileInput[currentDmRow, 7], "\" ", 
+                                           "nullable=\"", fileInput[currentDmRow, "isNullable"], "\" ", 
                                                "size=\"", "1", "\">", "\n", sep = "")
         }
         else {
-            outputLine <- paste("\t\t\t\t<field name=\"", fileInput[currentDmRow, 4], "\" ", 
-                                            "caption=\"", fileInput[currentDmRow, 2], "\" ", 
-                                               "type=\"", fileInput[currentDmRow, 5], "\" ", 
-                                           "nullable=\"", fileInput[currentDmRow, 7], "\" ", 
-                                               "size=\"", fileInput[currentDmRow, 6], "\">", "\n", sep = "")
+            outputLine <- paste("\t\t\t\t<fieldName=\"", fileInput[currentDmRow, "fieldName"], "\" ", 
+                                            "caption=\"", fileInput[currentDmRow, "field caption"], "\" ", 
+                                               "type=\"", fileInput[currentDmRow, "fieldType"], "\" ", 
+                                           "nullable=\"", fileInput[currentDmRow, "isNullable"], "\" ", 
+                                               "size=\"", fileInput[currentDmRow, "fieldLength"], "\">", "\n", sep = "")
         }
-            
         cat(outputLine)
-    }
-    else {
-        outputLine <- "\t\t\t</fieldgroup>\n"
-        cat(outputLine)
-        outputLine <- "\t\t</entity>\n"
-        cat(outputLine)
-        break
     }
 }
+
+#last elements are processed
+outputLine <- "\t\t\t</fieldgroup>\n"
+cat(outputLine)
+outputLine <- "\t\t</entity>\n"
+cat(outputLine)
 
 # Write output file
 sink()
