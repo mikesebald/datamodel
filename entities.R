@@ -3,10 +3,10 @@ library(xlsx)
 library(plyr)
 
 # open Excel file
-fileInput <- read.xlsx("Data Model 2.xlsx", sheetName = "Entities", startRow = 2, colIndex = c(1:11), encoding = "UTF-8")
+fileInput <- read.xlsx("Data Model.xlsx", sheetName = "Entities", startRow = 2, colIndex = c(1:11), encoding = "UTF-8")
 
 # Send output to file
-fileOutput <- "entities_fragment.config"
+fileOutput <- file("entities_fragment.config", encoding = "UTF-8")
 sink(fileOutput)
 
 #
@@ -46,11 +46,10 @@ for (currentDmEntity in fileInput[, "entityName"]) {
                                               "type=\"enum\" ", 
                                               "enum=\"", fileInput[currentDmRow, "enumerationName"], "\">", "\n", sep = "")
         }
-        else if (tolower(fileInput[currentDmRow, "fieldType"]) == "bool") {
-            # no booleans in CDH so use string length 1 instead
+        else if (tolower(fileInput[currentDmRow, "fieldType"]) == "boolean") {
             outputLine <- paste("\t\t\t\t<fieldName=\"", fileInput[currentDmRow, "fieldName"], "\" ", 
                                            "caption=\"", fileInput[currentDmRow, "fieldCaption"], "\" ", 
-                                              "type=\"string\" ", 
+                                              "type=\"boolean\" ", 
                                           "nullable=\"", fileInput[currentDmRow, "isNullable"], "\" ", 
                                               "size=\"", "1", "\">", "\n", sep = "")
         }
