@@ -42,16 +42,19 @@ for (currentDmEntity in fileInput[, "entityName"]) {
         }
         if (tolower(fileInput[currentDmRow, "fieldType"]) == "enum") {
             outputLine <- paste("\t\t\t\t<fieldName=\"", fileInput[currentDmRow, "fieldName"], "\" ", 
-                                           "caption=\"", fileInput[currentDmRow, "fieldCaption"], "\" ", 
-                                              "type=\"enum\" ", 
-                                              "enum=\"", fileInput[currentDmRow, "enumerationName"], "\">", "\n", sep = "")
+                                "caption=\"", fileInput[currentDmRow, "fieldCaption"], "\" ", 
+                                "type=\"enum\" ", 
+                                "enum=\"", fileInput[currentDmRow, "enumerationName"], "\">", "\n", sep = "")
+        }
+        else if (tolower(fileInput[currentDmRow, "fieldType"]) == "date") {
+            outputLine <- paste("\t\t\t\t<fieldName=\"", fileInput[currentDmRow, "fieldName"], "\" ", 
+                                "caption=\"", fileInput[currentDmRow, "fieldCaption"], "\" ", 
+                                "type=\"date\" ",  "\">", "\n", sep = "")
         }
         else if (tolower(fileInput[currentDmRow, "fieldType"]) == "boolean") {
             outputLine <- paste("\t\t\t\t<fieldName=\"", fileInput[currentDmRow, "fieldName"], "\" ", 
                                            "caption=\"", fileInput[currentDmRow, "fieldCaption"], "\" ", 
-                                              "type=\"boolean\" ", 
-                                          "nullable=\"", fileInput[currentDmRow, "isNullable"], "\" ", 
-                                              "size=\"", "1", "\">", "\n", sep = "")
+                                              "type=\"boolean\">", "\n", sep = "")
         }
         else {
             outputLine <- paste("\t\t\t\t<fieldName=\"", fileInput[currentDmRow, "fieldName"], "\" ", 
