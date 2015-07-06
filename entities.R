@@ -33,46 +33,45 @@ for (currentDmEntity in fileInput[, "entityName"]) {
         currentDmRow <- currentDmRow + 1
         if (currentDmEntity != lastDmEntity) {
             if (currentDmRow > 1) {
-                cat("\t\t\t</fieldgroup>\n")
+                #cat("\t\t\t</fieldgroup>\n")
                 cat("\t\t</entity>\n")
             }
             lastDmEntity <- currentDmEntity
-            cat(paste("\t\t<entityName=\"", lastDmEntity, "\">", "\n", sep = ""))
-            cat("\t\t\t<fieldgroup>\n")
+            cat(paste("\t\t<entity name=\"", lastDmEntity, "\">", "\n", sep = ""))
+            #cat("\t\t\t<fieldgroup>\n")
         }
         if (tolower(fileInput[currentDmRow, "fieldType"]) == "enum") {
-            outputLine <- paste("\t\t\t\t<fieldName=\"", fileInput[currentDmRow, "fieldName"], "\" ", 
+            outputLine <- paste("\t\t\t<field name=\"", fileInput[currentDmRow, "fieldName"], "\" ", 
                                 "caption=\"", fileInput[currentDmRow, "fieldCaption"], "\" ", 
                                 "type=\"enum\" ", 
-                                "enum=\"", fileInput[currentDmRow, "enumerationName"], "\">", "\n", sep = "")
+                                "enum=\"", fileInput[currentDmRow, "enumerationName"], "\" />", "\n", sep = "")
         }
         else if (tolower(fileInput[currentDmRow, "fieldType"]) == "date") {
-            outputLine <- paste("\t\t\t\t<fieldName=\"", fileInput[currentDmRow, "fieldName"], "\" ", 
+            outputLine <- paste("\t\t\t<field name=\"", fileInput[currentDmRow, "fieldName"], "\" ", 
                                 "caption=\"", fileInput[currentDmRow, "fieldCaption"], "\" ", 
-                                "type=\"date\" ",  "\">", "\n", sep = "")
+                                "type=\"date\" />", "\n", sep = "")
         }
         else if (tolower(fileInput[currentDmRow, "fieldType"]) == "boolean") {
-            outputLine <- paste("\t\t\t\t<fieldName=\"", fileInput[currentDmRow, "fieldName"], "\" ", 
+            outputLine <- paste("\t\t\t<field name=\"", fileInput[currentDmRow, "fieldName"], "\" ", 
                                            "caption=\"", fileInput[currentDmRow, "fieldCaption"], "\" ", 
-                                              "type=\"boolean\">", "\n", sep = "")
+                                              "type=\"boolean\" />", "\n", sep = "")
         }
         else {
-            outputLine <- paste("\t\t\t\t<fieldName=\"", fileInput[currentDmRow, "fieldName"], "\" ", 
+            outputLine <- paste("\t\t\t<field name=\"", fileInput[currentDmRow, "fieldName"], "\" ", 
                                            "caption=\"", fileInput[currentDmRow, "fieldCaption"], "\" ", 
                                               "type=\"", fileInput[currentDmRow, "fieldType"], "\" ", 
                                           "nullable=\"", fileInput[currentDmRow, "isNullable"], "\" ", 
-                                              "size=\"", fileInput[currentDmRow, "fieldLength"], "\">", "\n", sep = "")
+                                              "size=\"", fileInput[currentDmRow, "fieldLength"], "\" />", "\n", sep = "")
         }
         cat(outputLine)
     }
 }
 
 #last elements are processed
-cat("\t\t\t</fieldgroup>\n")
+#cat("\t\t\t</fieldgroup>\n")
 cat("\t\t</entity>\n")
 cat("\t</entity>\n")
 cat("</config>\n")
 
 # Write output file
-sink()
-sink(NULL)
+sink(file = NULL)

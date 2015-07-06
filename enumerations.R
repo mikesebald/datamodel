@@ -56,5 +56,4 @@ cat("\t</enums>\n")
 cat("</config>\n")
 
 # Write output file
-sink()
-sink(NULL)
+sink(file = NULL)
