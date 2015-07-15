@@ -50,7 +50,14 @@ for (currentDmEntity in fileInput[, "entityName"]) {
         else if (tolower(fileInput[currentDmRow, "fieldType"]) == "date") {
             outputLine <- paste("\t\t\t<field name=\"", fileInput[currentDmRow, "fieldName"], "\" ", 
                                 "caption=\"", fileInput[currentDmRow, "fieldCaption"], "\" ", 
-                                "type=\"date\" />", "\n", sep = "")
+                                "type=\"date\" ",
+                                "nullable=\"", fileInput[currentDmRow, "isNullable"], "\" />", "\n", sep = "")
+        }
+        else if (tolower(fileInput[currentDmRow, "fieldType"]) == "integer") {
+            outputLine <- paste("\t\t\t<field name=\"", fileInput[currentDmRow, "fieldName"], "\" ", 
+                                "caption=\"", fileInput[currentDmRow, "fieldCaption"], "\" ", 
+                                "type=\"integer\" ",
+                                "nullable=\"", fileInput[currentDmRow, "isNullable"], "\" />", "\n", sep = "")
         }
         else if (tolower(fileInput[currentDmRow, "fieldType"]) == "boolean") {
             outputLine <- paste("\t\t\t<field name=\"", fileInput[currentDmRow, "fieldName"], "\" ", 
