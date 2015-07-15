@@ -6,7 +6,7 @@ library(plyr)
 fileInput <- read.xlsx("Data Model.xlsx", sheetName = "Entities", startRow = 2, colIndex = c(1:11), encoding = "UTF-8")
 
 # Send output to file
-fileOutput <- file("entities_fragment.config", encoding = "UTF-8")
+fileOutput <- file("entities.config", encoding = "UTF-8")
 sink(fileOutput)
 
 #
@@ -19,7 +19,8 @@ colnames(fileInput) <- vecColnames
 fileInput$isNullable <- sapply(fileInput$isNullable, function(x) gsub("yes", "true", x, ignore.case = TRUE))
 fileInput$isNullable <- sapply(fileInput$isNullable, function(x) gsub("no", "false", x, ignore.case = TRUE))
 
-fileInput <- arrange(fileInput, entityName)
+#do not sort by entity
+#fileInput <- arrange(fileInput, entityName)
 
 cat("<?xml version=\"1.0\" encoding=\"utf-8\"?>\n")
 cat("<config>\n")

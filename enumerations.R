@@ -6,7 +6,7 @@ library(plyr)
 fileInput <- read.xlsx("Data Model.xlsx", sheetName = "Enumerations", startRow = 1, colIndex = c(1:4), encoding = "UTF-8")
 
 # Send output to file
-fileOutput <- file("enumerations_fragment.config", encoding = "UTF-8")
+fileOutput <- file("enumerations.config", encoding = "UTF-8")
 sink(fileOutput)
 
 vecColnames <- c("type", "code", "description", "reversedescription")
