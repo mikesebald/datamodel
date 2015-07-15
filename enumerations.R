@@ -6,7 +6,7 @@ library(plyr)
 fileInput <- read.xlsx("Data Model.xlsx", sheetName = "Enumerations", startRow = 1, colIndex = c(1:4), encoding = "UTF-8")
 
 # Send output to file
-fileOutput <- file("enumerations.config", encoding = "UTF-8")
+fileOutput <- file("enums.config", encoding = "UTF-8")
 sink(fileOutput)
 
 vecColnames <- c("type", "code", "description", "reversedescription")
@@ -38,13 +38,13 @@ for (currentDmEnum in fileInput[, "type"]) {
         if (is.na(fileInput[currentDmRow, "reversedescription"])) {
             outputLine <- paste("\t\t\t<value id=\"", enumCounter, "\" ", 
                                            "code=\"", fileInput[currentDmRow, "code"], "\" ", 
-                                    "description=\"", fileInput[currentDmRow, "description"], "\">", "\n", sep = "")
+                                    "description=\"", fileInput[currentDmRow, "description"], "\" />", "\n", sep = "")
         }
         else {
             outputLine <- paste("\t\t\t<value id=\"", enumCounter, "\" ", 
                                            "code=\"", fileInput[currentDmRow, "code"], "\" ", 
                                     "description=\"", fileInput[currentDmRow, "description"], "\" ", 
-                             "reversedescription=\"", fileInput[currentDmRow, "reversedescription"], "\">", "\n", sep = "")
+                             "reversedescription=\"", fileInput[currentDmRow, "reversedescription"], "\" />", "\n", sep = "")
         }
         cat(outputLine)
     }
