@@ -3,15 +3,15 @@ library(xlsx)
 library(plyr)
 
 # open Excel file
-fileInput <- read.xlsx("Data Model.xlsx", sheetName = "Entities", startRow = 2, colIndex = c(1:11), encoding = "UTF-8")
+fileInput <- read.xlsx("Data Model.xlsx", sheetName = "Entities", startRow = 2, colIndex = c(1:13), encoding = "UTF-8")
 
 # Send output to file
 fileOutput <- file("entities.config", encoding = "UTF-8")
 sink(fileOutput)
 
 #
-vecColnames <- c("inScope", "attributeName", "description", "permittedValues", 
-                 "entityName", "fieldName", "fieldCaption", "fieldType", "fieldLength", "isNullable", "enumerationName")
+vecColnames <- c("inScope", "attributeName", "description", "permittedValues", "providedBySource",
+                 "entityName", "fieldName", "fieldCaption", "fieldType", "fieldLength", "isNullable", "enumerationName", "comment")
 
 colnames(fileInput) <- vecColnames
 
