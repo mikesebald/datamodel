@@ -61,15 +61,29 @@ for (currentDmEntity in fileInput[, "entityName"]) {
         }
         else if (tolower(fileInput[currentDmRow, "fieldType"]) == "boolean") {
             outputLine <- paste("\t\t\t<field name=\"", fileInput[currentDmRow, "fieldName"], "\" ", 
-                                           "caption=\"", fileInput[currentDmRow, "fieldCaption"], "\" ", 
-                                              "type=\"boolean\" />", "\n", sep = "")
+                                "caption=\"", fileInput[currentDmRow, "fieldCaption"], "\" ", 
+                                "type=\"boolean\" ",
+                                "nullable=\"", fileInput[currentDmRow, "isNullable"], "\" />", "\n", sep = "")
         }
-        else {
+        else if ((tolower(fileInput[currentDmRow, "fieldType"]) == "string")
+             && (!is.na(tolower(fileInput[currentDmRow, "enumerationName"])))) {
+            outputLine <- paste("\t\t\t<field name=\"", fileInput[currentDmRow, "fieldName"], "\" ", 
+                                "caption=\"", fileInput[currentDmRow, "fieldCaption"], "\" ", 
+                                "enum=\"", fileInput[currentDmRow, "enumerationName"], "\" ",
+                                "type=\"string\" ",
+                                "nullable=\"", fileInput[currentDmRow, "isNullable"], "\" ",
+                                "size=\"", fileInput[currentDmRow, "fieldLength"], "\" />", "\n", sep = "")
+        }
+        else if ((tolower(fileInput[currentDmRow, "fieldType"]) == "string")
+             && (is.na(tolower(fileInput[currentDmRow, "enumerationName"])))) {
             outputLine <- paste("\t\t\t<field name=\"", fileInput[currentDmRow, "fieldName"], "\" ", 
                                            "caption=\"", fileInput[currentDmRow, "fieldCaption"], "\" ", 
                                               "type=\"", fileInput[currentDmRow, "fieldType"], "\" ", 
                                           "nullable=\"", fileInput[currentDmRow, "isNullable"], "\" ", 
                                               "size=\"", fileInput[currentDmRow, "fieldLength"], "\" />", "\n", sep = "")
+        }
+        else {
+            outputLine <- paste("INVALID SOURCE DATA !!!")
         }
         cat(outputLine)
     }
