@@ -33,80 +33,82 @@ currentDmRow <- 0
 for (currentDmEntity in fileInput[, "entityName"]) {
     if (!is.na(currentDmEntity)) {
         currentDmRow <- currentDmRow + 1
-        if (currentDmEntity != lastDmEntity) {
-            if (currentDmRow > 1)
-                cat("\t\t</entity>\n")
-             
-            lastDmEntity <- currentDmEntity
-            cat(paste("\t\t<entity name=\"", lastDmEntity, "\" caption=\"", lastDmEntity, "\">", "\n", sep = ""))
-        }
+            
+        if (tolower(fileInput[currentDmRow, "inScope"]) == "yes") {
+            if (currentDmEntity != lastDmEntity) {
+                if (currentDmRow > 1  && lastDmEntity != "")
+                    cat("\t\t</entity>\n")
+                 
+                lastDmEntity <- currentDmEntity
+                cat(paste("\t\t<entity name=\"", lastDmEntity, "\" caption=\"", lastDmEntity, "\">", "\n", sep = ""))
+            }
 
-        fieldName <- fileInput[currentDmRow, "fieldName"]
-        fieldCaption <- fileInput[currentDmRow, "fieldCaption"]
-        fieldType <- tolower(fileInput[currentDmRow, "fieldType"])
-        fieldLength <- fileInput[currentDmRow, "fieldLength"]
-        isNullable <- fileInput[currentDmRow, "isNullable"]
-        enumerationName <- fileInput[currentDmRow, "enumerationName"]
-        
-        if (is.na(fileInput[currentDmRow, "enumerationName"]))
-             enumerationName <- ""
-        else
-             enumerationName <- paste("enum=\"", fileInput[currentDmRow, "enumerationName"], "\" ", sep = "")
-
-        if (is.na(fileInput[currentDmRow, "compareOptions"]))
-             compareOptions <- ""
-        else
-             compareOptions <- paste("compareoptions=\"", fileInput[currentDmRow, "compareOptions"], "\" ", sep = "")
-
-        if (fieldType == "enum") {
-            outputLine <- paste("\t\t\t<field name=\"", fieldName, "\" ", 
-                                "caption=\"", fieldCaption, "\" ", 
-                                "type=\"enum\" ", 
-                                enumerationName,
-                                "nullable=\"", isNullable, "\" />", "\n", sep = "")
+            fieldName <- fileInput[currentDmRow, "fieldName"]
+            fieldCaption <- fileInput[currentDmRow, "fieldCaption"]
+            fieldType <- tolower(fileInput[currentDmRow, "fieldType"])
+            fieldLength <- fileInput[currentDmRow, "fieldLength"]
+            isNullable <- fileInput[currentDmRow, "isNullable"]
+            enumerationName <- fileInput[currentDmRow, "enumerationName"]
+            
+            if (is.na(fileInput[currentDmRow, "enumerationName"]))
+                 enumerationName <- ""
+            else
+                 enumerationName <- paste("enum=\"", fileInput[currentDmRow, "enumerationName"], "\" ", sep = "")
+    
+            if (is.na(fileInput[currentDmRow, "compareOptions"]))
+                 compareOptions <- ""
+            else
+                 compareOptions <- paste("compareoptions=\"", fileInput[currentDmRow, "compareOptions"], "\" ", sep = "")
+    
+            if (fieldType == "enum") {
+                outputLine <- paste("\t\t\t<field name=\"", fieldName, "\" ", 
+                                    "caption=\"", fieldCaption, "\" ", 
+                                    "type=\"enum\" ", 
+                                    enumerationName,
+                                    "nullable=\"", isNullable, "\" />", "\n", sep = "")
+            }
+            else if (fieldType == "date") {
+                 outputLine <- paste("\t\t\t<field name=\"", fieldName, "\" ", 
+                                     "caption=\"", fieldCaption, "\" ", 
+                                     "type=\"date\" ",
+                                     "nullable=\"", isNullable, "\" />", "\n", sep = "")
+            }
+            else if (fieldType == "datetime") {
+                 outputLine <- paste("\t\t\t<field name=\"", fieldName, "\" ", 
+                                     "caption=\"", fieldCaption, "\" ", 
+                                     "type=\"datetime\" ",
+                                     "nullable=\"", isNullable, "\" />", "\n", sep = "")
+            }
+            else if (fieldType == "int") {
+                outputLine <- paste("\t\t\t<field name=\"", fieldName, "\" ", 
+                                    "caption=\"", fieldCaption, "\" ", 
+                                    "type=\"int\" ",
+                                    "nullable=\"", isNullable, "\" />", "\n", sep = "")
+            }
+            else if (fieldType == "boolean") {
+                outputLine <- paste("\t\t\t<field name=\"", fieldName, "\" ", 
+                                    "caption=\"", fieldCaption, "\" ", 
+                                    "type=\"boolean\" ",
+                                    "nullable=\"", isNullable, "\" />", "\n", sep = "")
+            }
+            else if (fieldType == "string") {
+                outputLine <- paste("\t\t\t<field name=\"", fieldName, "\" ", 
+                                    "caption=\"", fieldCaption, "\" ", 
+                                    enumerationName,
+                                    "type=\"string\" ",
+                                    "nullable=\"", isNullable, "\" ",
+                                    compareOptions,
+                                    "size=\"", fieldLength, "\" />", "\n", sep = "")
+            }
+            else {
+                outputLine <- paste("INVALID SOURCE DATA !!!")
+            }
+            cat(outputLine)
         }
-        else if (fieldType == "date") {
-             outputLine <- paste("\t\t\t<field name=\"", fieldName, "\" ", 
-                                 "caption=\"", fieldCaption, "\" ", 
-                                 "type=\"date\" ",
-                                 "nullable=\"", isNullable, "\" />", "\n", sep = "")
-        }
-        else if (fieldType == "datetime") {
-             outputLine <- paste("\t\t\t<field name=\"", fieldName, "\" ", 
-                                 "caption=\"", fieldCaption, "\" ", 
-                                 "type=\"datetime\" ",
-                                 "nullable=\"", isNullable, "\" />", "\n", sep = "")
-        }
-        else if (fieldType == "integer") {
-            outputLine <- paste("\t\t\t<field name=\"", fieldName, "\" ", 
-                                "caption=\"", fieldCaption, "\" ", 
-                                "type=\"integer\" ",
-                                "nullable=\"", isNullable, "\" />", "\n", sep = "")
-        }
-        else if (fieldType == "boolean") {
-            outputLine <- paste("\t\t\t<field name=\"", fieldName, "\" ", 
-                                "caption=\"", fieldCaption, "\" ", 
-                                "type=\"boolean\" ",
-                                "nullable=\"", isNullable, "\" />", "\n", sep = "")
-        }
-        else if (fieldType == "string") {
-            outputLine <- paste("\t\t\t<field name=\"", fieldName, "\" ", 
-                                "caption=\"", fieldCaption, "\" ", 
-                                enumerationName,
-                                "type=\"string\" ",
-                                "nullable=\"", isNullable, "\" ",
-                                compareOptions,
-                                "size=\"", fieldLength, "\" />", "\n", sep = "")
-        }
-        else {
-            outputLine <- paste("INVALID SOURCE DATA !!!")
-        }
-        cat(outputLine)
     }
 }
 
 #last elements are processed
-#cat("\t\t\t</fieldgroup>\n")
 cat("\t\t</entity>\n")
 cat("\t</entity>\n")
 cat("</config>\n")
