@@ -36,15 +36,13 @@ for (currentDmEnum in fileInput[, "type"]) {
             enumCounter = 1
         }
         if (is.na(fileInput[currentDmRow, "reversedescription"])) {
-            outputLine <- paste("\t\t\t<value id=\"", enumCounter, "\" ", 
-                                           "code=\"", fileInput[currentDmRow, "code"], "\" ", 
-                                    "description=\"", fileInput[currentDmRow, "description"], "\" />", "\n", sep = "")
+            outputLine <- paste("\t\t\t<value code=\"", fileInput[currentDmRow, "code"], "\" ", 
+                                "description=\"", fileInput[currentDmRow, "description"], "\" />", "\n", sep = "")
         }
         else {
-            outputLine <- paste("\t\t\t<value id=\"", enumCounter, "\" ", 
-                                           "code=\"", fileInput[currentDmRow, "code"], "\" ", 
-                                    "description=\"", fileInput[currentDmRow, "description"], "\" ", 
-                             "reversedescription=\"", fileInput[currentDmRow, "reversedescription"], "\" />", "\n", sep = "")
+            outputLine <- paste("\t\t\t<value code=\"", fileInput[currentDmRow, "code"], "\" ", 
+                                      "description=\"", fileInput[currentDmRow, "description"], "\" ", 
+                               "reversedescription=\"", fileInput[currentDmRow, "reversedescription"], "\" />", "\n", sep = "")
         }
         cat(outputLine)
     }
